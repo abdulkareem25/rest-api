@@ -1,5 +1,12 @@
+const { connect } = require('mongoose');
 const app = require('./src/app.js');
 
+function connectDB () {
+    connect(process.env.DB_URI);
+    console.log("Database Connected...")
+};
+
 app.listen(3000, (req, res) => {
-    console.log('Server is running on port 3000')
+    console.log('Server is running on port 3000');
+    connectDB();
 });
