@@ -1,8 +1,8 @@
 const { connect } = require('mongoose');
 const app = require('./src/app.js');
 
-function connectDB () {
-    connect(process.env.DB_URI);
+async function connectDB () {
+    await connect(process.env.DB_URI);
     console.log("Database Connected...")
 };
 

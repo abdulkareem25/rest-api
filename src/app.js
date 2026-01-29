@@ -1,6 +1,8 @@
 const express = require('express');
 const morgan = require('morgan')
-const { config } = require('dotenv')
+const { config } = require('dotenv');
+const Note = require('../models/note.model');
+const { Model } = require('mongoose');
 
 const app = express();
 config();
@@ -8,12 +10,16 @@ config();
 app.use(express.json());
 app.use(morgan('dev'));
 
-let notes = [];
+app.post('/create', async (req, res) => {
+    const { title, desc } = req.body;
 
-app.post('/create', (req, res) => {
-    notes.push(req.body);
+    await Note.create({
+        title, 
+        desc
+    });
+
     res.status(201).json({
-        message : "Note Created"
+        message: "Note Created"
     });
 });
 
