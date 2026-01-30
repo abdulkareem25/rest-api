@@ -1,11 +1,9 @@
 const express = require('express');
 const morgan = require('morgan')
-const { config } = require('dotenv');
 const Note = require('../models/note.model');
 const { Model } = require('mongoose');
 
 const app = express();
-config();
 
 app.use(express.json());
 app.use(morgan('dev'));

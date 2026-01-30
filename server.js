@@ -1,12 +1,8 @@
-const { connect } = require('mongoose');
+require('dotenv').config();
+const connectDB = require('./config/db.js');
 const app = require('./src/app.js');
 
-async function connectDB () {
-    await connect(process.env.DB_URI);
-    console.log("Database Connected...")
-};
-
-app.listen(3000, (req, res) => {
+app.listen(3000, () => {
     console.log('Server is running on port 3000');
     connectDB();
 });
