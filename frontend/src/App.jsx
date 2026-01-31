@@ -1,22 +1,25 @@
-import React from 'react'
-import { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 
 const App = () => {
   const [notes, setNotes] = useState([]);
 
   useEffect(() => {
-    setNotes([
-      { id: 1, title: "First Note", desc: "This is the content of the first note." },
-      { id: 2, title: "Second Note", desc: "This is the content of the second note." }
-    ]);
+    axios.get('http://localhost:3000/')
+      .then(response => {
+        setNotes(response.data.notes);
+      })
+      .catch(error => {
+        console.error('Error fetching notes:', error);
+      });
   }, []);
-  
+
   return (
     <div className='app'>
       <h1>Notes Application</h1>
       <div className='notes-list'>
         {notes.map(note => (
-          <div key={note.id} className='note'>
+          <div key={note._id} className='note'>
             <h2>{note.title}</h2>
             <p>{note.desc}</p>
           </div>
