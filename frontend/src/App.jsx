@@ -17,11 +17,20 @@ const App = () => {
   return (
     <div className='app'>
       <h1>Notes Application</h1>
+      <div className="add-note">
+        <input type="text" placeholder="Title" />
+        <input type="text" placeholder="Description" />
+        <button>Add Note</button>
+      </div>
       <div className='notes-list'>
         {notes.map(note => (
           <div key={note._id} className='note'>
             <h2>{note.title}</h2>
             <p>{note.desc}</p>
+            <div className="btns">
+              <button className='edit'>Edit</button>
+              <button>Delete</button>
+            </div>
           </div>
         ))}
       </div>
