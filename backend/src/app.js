@@ -1,13 +1,15 @@
 const express = require('express');
-const morgan = require('morgan')
+const morgan = require('morgan');
+const cors = require('cors');
 const Notes = require('../models/note.model');
 
 const app = express();
 
 app.use(express.json());
 app.use(morgan('dev'));
+app.use(cors());
 
-app.post('/create', async (req, res) => {
+app.post('/', async (req, res) => {
     const { title, desc } = req.body;
 
     let note = await Notes.create({
@@ -21,14 +23,14 @@ app.post('/create', async (req, res) => {
     });
 });
 
-app.get('/read', async (req, res) => {
+app.get('/', async (req, res) => {
     const notes = await Notes.find();
     res.status(200).json({
         notes
     });
 });
 
-app.patch('/updateP/:index', async (req, res) => {
+app.patch('/:index', async (req, res) => {
     const { desc } = req.body;
     let note = await Notes.findByIdAndUpdate(
         req.params.index,
@@ -40,7 +42,7 @@ app.patch('/updateP/:index', async (req, res) => {
     });
 });
 
-app.delete('/del/:index', async (req, res) => {
+app.delete('/:index', async (req, res) => {
     await Notes.findByIdAndDelete(req.params.index);
     res.status(204).json({
         message: "deleted successfully"
