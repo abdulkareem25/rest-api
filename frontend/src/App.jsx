@@ -14,14 +14,31 @@ const App = () => {
       });
   }, []);
 
+  const submitHandler = (e) => {
+    e.preventDefault();
+    const title = e.target[0].value;
+    const desc = e.target[1].value;
+
+    axios.post('http://localhost:3000/', { title, desc })
+      .then(response => {
+        setNotes(prevNotes => [...prevNotes, response.data.note]);
+        e.target.reset();
+      })
+      .catch(error => {
+        console.error('Error adding note:', error);
+      });
+  };
+
   return (
     <div className='app'>
       <h1>Notes Application</h1>
-      <div className="add-note">
+      <form className="add-note"
+        onSubmit={submitHandler}
+      >
         <input type="text" placeholder="Title" />
         <input type="text" placeholder="Description" />
         <button>Add Note</button>
-      </div>
+      </form>
       <div className='notes-list'>
         {notes.map(note => (
           <div key={note._id} className='note'>
