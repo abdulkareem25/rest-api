@@ -29,6 +29,20 @@ const App = () => {
       });
   };
 
+  const deleteHandler = (e) => {
+    const note = e.target.closest('.note');
+    const noteId = note.getAttribute('data-id');
+
+    axios.delete(`http://localhost:3000/${noteId}`)
+      .then(() => {
+        setNotes(prevNotes => prevNotes.filter(n => n._id !== noteId));
+      })
+      .catch(error => {
+        console.error('Error deleting note:', error);
+      });
+  };
+
+
   return (
     <div className='app'>
       <h1>Notes Application</h1>
@@ -41,12 +55,21 @@ const App = () => {
       </form>
       <div className='notes-list'>
         {notes.map(note => (
-          <div key={note._id} className='note'>
+          <div key={note._id} data-id={note._id} className='note'>
             <h2>{note.title}</h2>
             <p>{note.desc}</p>
             <div className="btns">
-              <button className='edit'>Edit</button>
-              <button>Delete</button>
+              <button
+                className='edit'
+                // onClick={editHandler}
+              >
+                Edit
+              </button>
+              <button
+                onClick={deleteHandler}
+              >
+                Delete
+              </button>
             </div>
           </div>
         ))}
