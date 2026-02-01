@@ -42,6 +42,22 @@ const App = () => {
       });
   };
 
+  const editHandler = (e) => {
+    const note = e.target.closest('.note');
+    const noteId = note.getAttribute('data-id');
+    const newDesc = prompt('Enter new description:');
+
+    if (newDesc) {
+      axios.patch(`http://localhost:3000/${noteId}`, { desc: newDesc })
+        .then(response => {
+          console.log('Note edited:', response.data.note);
+          setNotes(prevNotes => prevNotes.map(n => n._id === noteId ? response.data.note : n));
+        })
+        .catch(error => {
+          console.error('Error editing note:', error);
+        });
+    }
+  };
 
   return (
     <div className='app'>
@@ -61,7 +77,7 @@ const App = () => {
             <div className="btns">
               <button
                 className='edit'
-                // onClick={editHandler}
+                onClick={editHandler}
               >
                 Edit
               </button>
