@@ -9,7 +9,7 @@ app.use(express.json());
 app.use(morgan('dev'));
 app.use(cors());
 
-app.post('/', async (req, res) => {
+app.post('/notes', async (req, res) => {
     const { title, desc } = req.body;
 
     let note = await Notes.create({
@@ -23,30 +23,38 @@ app.post('/', async (req, res) => {
     });
 });
 
-app.get('/', async (req, res) => {
+app.get('/notes', async (req, res) => {
     const notes = await Notes.find();
     res.status(200).json({
         notes
     });
 });
 
-app.patch('/:index', async (req, res) => {
+app.patch('/notes/:index', async (req, res) => {
     const { desc } = req.body;
+
     let note = await Notes.findByIdAndUpdate(
         req.params.index,
-        { desc }
+        { desc },
+        { new: true }
     );
+
     res.status(200).json({
         message: "Note Updated",
         note
     });
 });
 
-app.delete('/:index', async (req, res) => {
+app.delete('/notes/:index', async (req, res) => {
     await Notes.findByIdAndDelete(req.params.index);
+    
     res.status(204).json({
         message: "deleted successfully"
     });
 });
+
+app.get('*paths', (req, res) => {
+    res.send('Hello World');
+})
 
 module.exports = app;
