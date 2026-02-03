@@ -2,12 +2,19 @@ const express = require('express');
 const morgan = require('morgan');
 const cors = require('cors');
 const Notes = require('../models/note.model');
+const path = require('path');
 
 const app = express();
+const publicPath = path.join(__dirname, "..", "public");
 
 app.use(express.json());
 app.use(morgan('dev'));
 app.use(cors());
+app.use(express.static(publicPath));
+
+app.get('/', (req, res) => {
+    res.sendFile(path.join(publicPath, "index.html"));
+});
 
 app.post('/notes', async (req, res) => {
     const { title, desc } = req.body;
@@ -47,14 +54,10 @@ app.patch('/notes/:index', async (req, res) => {
 
 app.delete('/notes/:index', async (req, res) => {
     await Notes.findByIdAndDelete(req.params.index);
-    
+
     res.status(204).json({
         message: "deleted successfully"
     });
 });
-
-app.get('*paths', (req, res) => {
-    res.send('Hello World');
-})
 
 module.exports = app;
