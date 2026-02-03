@@ -3,15 +3,19 @@ import axios from 'axios';
 
 const App = () => {
   const [notes, setNotes] = useState([]);
+  const bURL = 'http://localhost:3000/notes';
+
+  const fetchNotes = async () => {
+    try {
+      const response = await axios.get(bURL);
+      setNotes(response.data.notes);
+    } catch (error) {
+      console.error('Error fetching notes:', error);
+    }
+  };
 
   useEffect(() => {
-    axios.get('http://localhost:3000/')
-      .then(response => {
-        setNotes(response.data.notes);
-      })
-      .catch(error => {
-        console.error('Error fetching notes:', error);
-      });
+    fetchNotes();
   }, []);
 
   const submitHandler = (e) => {
@@ -19,7 +23,7 @@ const App = () => {
     const title = e.target[0].value;
     const desc = e.target[1].value;
 
-    axios.post('http://localhost:3000/', { title, desc })
+    axios.post(bURL, { title, desc })
       .then(response => {
         setNotes(prevNotes => [...prevNotes, response.data.note]);
         e.target.reset();
@@ -29,11 +33,8 @@ const App = () => {
       });
   };
 
-  const deleteHandler = (e) => {
-    const note = e.target.closest('.note');
-    const noteId = note.getAttribute('data-id');
-
-    axios.delete(`http://localhost:3000/${noteId}`)
+  const deleteHandler = (noteId) => {
+    axios.delete(`${bURL}/${noteId}`)
       .then(() => {
         setNotes(prevNotes => prevNotes.filter(n => n._id !== noteId));
       })
@@ -42,15 +43,12 @@ const App = () => {
       });
   };
 
-  const editHandler = (e) => {
-    const note = e.target.closest('.note');
-    const noteId = note.getAttribute('data-id');
+  const editHandler = (noteId) => {
     const newDesc = prompt('Enter new description:');
 
     if (newDesc) {
-      axios.patch(`http://localhost:3000/${noteId}`, { desc: newDesc })
+      axios.patch(`${bURL}/${noteId}`, { desc: newDesc })
         .then(response => {
-          console.log('Note edited:', response.data.note);
           setNotes(prevNotes => prevNotes.map(n => n._id === noteId ? response.data.note : n));
         })
         .catch(error => {
@@ -65,24 +63,24 @@ const App = () => {
       <form className="add-note"
         onSubmit={submitHandler}
       >
-        <input type="text" placeholder="Title" />
-        <input type="text" placeholder="Description" />
+        <input type="text" placeholder="Title" required/>
+        <input type="text" placeholder="Description" required/>
         <button>Add Note</button>
       </form>
       <div className='notes-list'>
         {notes.map(note => (
-          <div key={note._id} data-id={note._id} className='note'>
+          <div key={note._id} className='note'>
             <h2>{note.title}</h2>
             <p>{note.desc}</p>
             <div className="btns">
               <button
                 className='edit'
-                onClick={editHandler}
+                onClick={() => editHandler(note._id)}
               >
                 Edit
               </button>
               <button
-                onClick={deleteHandler}
+                onClick={() => deleteHandler(note._id)}
               >
                 Delete
               </button>
