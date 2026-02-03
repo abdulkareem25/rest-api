@@ -2,19 +2,13 @@ const express = require('express');
 const morgan = require('morgan');
 const cors = require('cors');
 const Notes = require('../models/note.model');
-const path = require('path');
 
 const app = express();
-const publicPath = path.join(__dirname, "..", "public");
 
 app.use(express.json());
 app.use(morgan('dev'));
 app.use(cors());
-app.use(express.static(publicPath));
-
-app.get('/', (req, res) => {
-    res.sendFile(path.join(publicPath, "index.html"));
-});
+app.use(express.static("./public"));
 
 app.post('/notes', async (req, res) => {
     const { title, desc } = req.body;
