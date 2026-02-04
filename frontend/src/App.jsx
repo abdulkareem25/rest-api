@@ -3,7 +3,7 @@ import axios from 'axios';
 
 const App = () => {
   const [notes, setNotes] = useState([]);
-  const bURL = 'http://localhost:3000/notes';
+  const bURL = 'https://rest-api-m78s.onrender.com/api/notes';
 
   const fetchNotes = async () => {
     try {
