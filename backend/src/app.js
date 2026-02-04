@@ -10,7 +10,7 @@ app.use(morgan('dev'));
 app.use(cors());
 app.use(express.static("./public"));
 
-app.post('/notes', async (req, res) => {
+app.post('/api/notes', async (req, res) => {
     const { title, desc } = req.body;
 
     let note = await Notes.create({
@@ -24,14 +24,14 @@ app.post('/notes', async (req, res) => {
     });
 });
 
-app.get('/notes', async (req, res) => {
+app.get('/api/notes', async (req, res) => {
     const notes = await Notes.find();
     res.status(200).json({
         notes
     });
 });
 
-app.patch('/notes/:index', async (req, res) => {
+app.patch('/api/notes/:index', async (req, res) => {
     const { desc } = req.body;
 
     let note = await Notes.findByIdAndUpdate(
@@ -46,7 +46,7 @@ app.patch('/notes/:index', async (req, res) => {
     });
 });
 
-app.delete('/notes/:index', async (req, res) => {
+app.delete('/api/notes/:index', async (req, res) => {
     await Notes.findByIdAndDelete(req.params.index);
 
     res.status(204).json({
